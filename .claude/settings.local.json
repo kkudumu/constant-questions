@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p .claude/commands config/prompts scripts kb)",
+      "Bash(touch kb/.gitkeep)"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+.env
+kb/
+!kb/.gitkeep
+__pycache__/
+*.pyc
+.worktrees/

@@ -1,0 +1,15 @@
+graph TD
+    A["/triage command"] --> B["filter_tickets (MCP)"]
+    A --> C["list_all_ticket_conversation (MCP)"]
+    A --> D["get_ticket_by_id (MCP)"]
+    A --> E["config/exclusions.yaml"]
+    A --> F["config/prompts/classifier.md"]
+    A --> G["kb/*.md (local cache)"]
+    A --> H["config/prompts/draft_reply.md"]
+    A --> I["create_ticket_note (MCP)"]
+
+    J["/sync-kb command"] --> K["scripts/sync_clickup_kb.py"]
+    K --> L["ClickUp v3 Docs API"]
+    K --> G
+
+    style G fill:#f9f,stroke:#333
