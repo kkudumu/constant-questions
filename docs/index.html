@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>constantquestions — Auto-draft Freshservice replies</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #02a95c;
+      --green-dark: #017a42;
+      --green-light: #e6f7ef;
+      --green-mid: #c3edda;
+      --text: #1c1c1e;
+      --text-muted: #6e6e73;
+      --border: #e5e5ea;
+      --bg: #f5f5f7;
+      --white: #ffffff;
+      --code-bg: #f0f2f5;
+      --shadow: 0 2px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+      --radius: 16px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--green);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+    }
+    .nav-links { display: flex; gap: 8px; align-items: center; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--green); color: white; }
+    .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(2,169,92,0.35); }
+    .btn-ghost { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #e6f7ef 60%, #c3edda 100%);
+      padding: 80px 24px 72px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-light);
+      color: var(--green-dark);
+      border: 1px solid var(--green-mid);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      color: var(--text);
+      margin-bottom: 20px;
+      line-height: 1.1;
+    }
+    .hero h1 span { color: var(--green); }
+    .hero-sub {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 56px;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-value { font-size: 28px; font-weight: 800; color: var(--green); }
+    .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 72px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    /* ── SECTION HEADER ── */
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-tag {
+      display: inline-block;
+      background: var(--green-light);
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 12px;
+    }
+    .section-header h2 {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .section-header p { font-size: 17px; color: var(--text-muted); max-width: 520px; margin: 0 auto; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      border: 1px solid var(--border);
+    }
+    .card-full { width: 100%; }
+
+    /* ── DIAGRAM CARD ── */
+    .diagram-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 40px 32px;
+      overflow-x: auto;
+    }
+    .diagram-card .mermaid { display: flex; justify-content: center; }
+
+    /* ── FLOW STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      position: relative;
+    }
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 44px;
+      width: 2px;
+      height: calc(100% - 12px);
+      background: linear-gradient(to bottom, var(--green-mid), var(--border));
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: var(--green);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-body { padding-bottom: 32px; flex: 1; }
+    .step-body h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+    .step-body p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .step-pill {
+      display: inline-block;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      color: var(--green-dark);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      margin-top: 6px;
+    }
+
+    /* ── GRID ── */
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+
+    /* ── FEATURE CARD ── */
+    .feature-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 28px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--green-light);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
+
+    /* ── SAFETY RAIL CARD ── */
+    .rail-card {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      padding: 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      transition: box-shadow 0.2s;
+    }
+    .rail-card:hover { box-shadow: var(--shadow); }
+    .rail-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .rail-icon.skip { background: #fff3e0; }
+    .rail-icon.require { background: var(--green-light); }
+    .rail-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .rail-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── CODE ── */
+    pre, code {
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+    }
+    .code-block {
+      background: #1c1c1e;
+      color: #e5e5e5;
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      font-size: 13.5px;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+    .code-block .comment { color: #6e9a72; }
+    .code-block .cmd { color: #64d2ff; }
+    .code-block .flag { color: #ffd60a; }
+    .code-block .val { color: #ff9f0a; }
+    .inline-code {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 13px;
+      color: var(--green-dark);
+    }
+
+    /* ── SETUP STEPS ── */
+    .setup-step {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 28px 32px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .setup-num {
+      width: 48px;
+      height: 48px;
+      background: var(--green);
+      color: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .setup-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .setup-body p { font-size: 14px; color: var(--text-muted); margin-bottom: 14px; }
+
+    /* ── DRAFT PREVIEW ── */
+    .draft-preview {
+      background: var(--white);
+      border: 1.5px solid var(--green-mid);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .draft-preview-header {
+      background: var(--green-light);
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid var(--green-mid);
+    }
+    .draft-preview-body {
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .draft-preview-body .draft-header { font-weight: 800; color: var(--green-dark); margin-bottom: 12px; }
+    .draft-preview-body .draft-marker { color: var(--text-muted); font-size: 12px; font-family: monospace; margin-top: 12px; }
+
+    /* ── FILE TREE ── */
+    .file-tree {
+      background: #1c1c1e;
+      color: #e5e5e5;
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 13px;
+      line-height: 2;
+    }
+    .tree-dir { color: #64d2ff; font-weight: 600; }
+    .tree-file { color: #e5e5e5; }
+    .tree-comment { color: #6e9a72; margin-left: 8px; }
+    .tree-key { color: var(--green); }
+
+    /* ── RESULT TABLE ── */
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .result-table th {
+      text-align: left;
+      padding: 10px 16px;
+      background: var(--code-bg);
+      border-bottom: 2px solid var(--border);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+    .result-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .result-table tr:last-child td { border-bottom: none; }
+    .result-table tr:hover td { background: var(--bg); }
+    .tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .tag-green { background: var(--green-light); color: var(--green-dark); }
+    .tag-gray { background: var(--code-bg); color: var(--text-muted); }
+    .tag-yellow { background: #fff3e0; color: #b45309; }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--green-light);
+      border-left: 4px solid var(--green);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 16px 20px;
+      font-size: 14px;
+      color: var(--text);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: -1px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: rgba(255,255,255,0.6);
+      padding: 48px 24px;
+      text-align: center;
+    }
+    footer a { color: var(--green); text-decoration: none; }
+    footer .footer-logo { font-size: 20px; font-weight: 800; color: white; margin-bottom: 8px; }
+    footer p { font-size: 14px; margin-bottom: 4px; }
+
+    /* ── MERMAID OVERRIDES ── */
+    .mermaid svg { max-width: 100%; height: auto; }
+
+    @media (max-width: 600px) {
+      .hero-stats { gap: 28px; }
+      .setup-step { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">❓</div>
+      constantquestions
+    </a>
+    <div class="nav-links">
+      <a href="https://github.com/kkudumu/constant-questions" target="_blank" class="btn btn-ghost">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="#setup" class="btn btn-primary">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-badge">
+    <span>🤖</span> Claude Code · Freshservice · ClickUp
+  </div>
+  <h1>Stop copy-pasting<br/><span>the same reply</span></h1>
+  <p class="hero-sub">
+    constantquestions watches your Freshservice queue, finds "where do I request X?" tickets,
+    looks up the answer in your ClickUp KB, and drafts the reply for you — ready to review and send.
+  </p>
+  <div class="hero-actions">
+    <a href="#how-it-works" class="btn btn-primary" style="font-size:15px;padding:12px 28px;">See how it works</a>
+    <a href="#setup" class="btn btn-ghost" style="font-size:15px;padding:12px 28px;">Setup guide</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Replies auto-sent</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">9</div>
+      <div class="stat-label">Safety checks per ticket</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">100%</div>
+      <div class="stat-label">Human-reviewed before send</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">v1</div>
+      <div class="stat-label">Draft-only mode</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="how-it-works" style="background:white;">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">How it works</div>
+      <h2>From ticket to draft in one command</h2>
+      <p>Run <code class="inline-code">/triage</code> and the workflow handles everything — fetching, classifying, searching, and drafting. You only review.</p>
+    </div>
+
+    <div class="grid-2" style="gap:32px; align-items:start;">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Fetch open tickets</h3>
+            <p>Pulls open Freshservice tickets from your queue created in the last 24 hours (configurable with <code class="inline-code">--since</code>).</p>
+            <div class="step-pill">filter_tickets MCP</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Idempotency check</h3>
+            <p>Scans existing ticket conversations for the <code class="inline-code">cq-bot:v1</code> marker. Already-processed tickets are skipped immediately.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Hard exclusions</h3>
+            <p>Skips tickets from VIP email addresses, those matching security or compliance keywords, or any ticket with attachments.</p>
+            <div class="step-pill">config/exclusions.yaml</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h3>Classify the ticket</h3>
+            <p>Runs a strict LLM classifier to determine if the ticket is genuinely asking "where do I go to request X?" — anything ambiguous is skipped.</p>
+            <div class="step-pill">config/prompts/classifier.md</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h3>Search local KB</h3>
+            <p>Extracts keywords from the ticket, greps the local <code class="inline-code">kb/</code> folder, and reads the top matching ClickUp doc. No KB match = skip.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-body">
+            <h3>Draft the reply</h3>
+            <p>Generates a private note using only information from the KB doc. Includes a DRAFT header, the source doc link, and the idempotency marker.</p>
+            <div class="step-pill">config/prompts/draft_reply.md</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div>
+          <div class="step-body">
+            <h3>Post as private note</h3>
+            <p>Creates a private note on the ticket — invisible to the requester until a human agent reviews it and sends the reply.</p>
+            <div class="step-pill">create_ticket_note MCP · private: true</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">8</div>
+          <div class="step-body">
+            <h3>Print the summary</h3>
+            <p>After all tickets are processed, outputs a table showing what was drafted, what was skipped, and why.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div class="diagram-card">
+          <div class="mermaid">
+graph TD
+    A([Run /triage]) --> B[Fetch open\ntickets]
+    B --> C{Already\nprocessed?}
+    C -- yes --> D[skip:\nalready_drafted]
+    C -- no --> E{On exclusion\nlist?}
+    E -- yes --> F[skip:\nexcluded]
+    E -- no --> G{Routing\nquestion?}
+    G -- no --> H[skip:\nnot_routing]
+    G -- yes --> I[Search\nkb/]
+    I --> J{KB\nmatch?}
+    J -- no --> K[skip:\nno_kb_match]
+    J -- yes --> L[Draft\nnote]
+    L --> M[Post private\nnote]
+    M --> N([You review\nand send ✓])
+
+    style A fill:#02a95c,color:#fff,stroke:none
+    style N fill:#02a95c,color:#fff,stroke:none
+    style D fill:#f0f2f5,stroke:#e5e5ea,color:#6e6e73
+    style F fill:#f0f2f5,stroke:#e5e5ea,color:#6e6e73
+    style H fill:#f0f2f5,stroke:#e5e5ea,color:#6e6e73
+    style K fill:#f0f2f5,stroke:#e5e5ea,color:#6e6e73
+          </div>
+        </div>
+
+        <div class="draft-preview">
+          <div class="draft-preview-header">
+            <span>🔒</span> Private note — Freshservice (not visible to requester)
+          </div>
+          <div class="draft-preview-body">
+            <div class="draft-header">**DRAFT — review before sending**</div>
+            Hi Alex,<br/><br/>
+            To request a new laptop, submit a ticket through the IT Hardware Request portal. The IT team typically reviews requests within 2 business days and will reach out to confirm specs.<br/><br/>
+            You can find more details and submit your request here:<br/>
+            <a href="#" style="color:var(--green);">https://app.clickup.com/v/dc/...</a><br/><br/>
+            Let me know if you have any questions.
+            <div class="draft-marker">&lt;!-- cq-bot:v1 --&gt;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── KB SYNC ── -->
+<section id="kb-sync" style="background:var(--bg);">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Knowledge Base</div>
+      <h2>Your ClickUp docs, locally searchable</h2>
+      <p>The sync script pulls your ClickUp routing docs down to plain Markdown files so the triage workflow can grep them instantly — no vector DB, no API calls at triage time.</p>
+    </div>
+
+    <div class="grid-2" style="gap:32px; align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div class="diagram-card">
+          <div class="mermaid">
+graph LR
+    A([/sync-kb]) --> B[sync_clickup_kb.py]
+    B --> C[ClickUp v3 API]
+    C --> D[List docs by\nfolder ID]
+    D --> E{Local copy\ncurrent?}
+    E -- yes --> F[skip]
+    E -- no --> G[Fetch pages\nand content]
+    G --> H[Write kb/slug.md\nwith frontmatter]
+
+    style A fill:#02a95c,color:#fff,stroke:none
+    style F fill:#f0f2f5,stroke:#e5e5ea,color:#6e6e73
+          </div>
+        </div>
+        <div class="callout">
+          <span class="callout-icon">💡</span>
+          <div>The sync is <strong>incremental</strong> — it compares <code class="inline-code">date_updated</code> timestamps and skips docs that haven't changed, so re-running is always cheap.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div class="card">
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:16px;">Each synced doc looks like this</h3>
+          <div class="code-block">
+<span class="comment">---</span>
+<span class="val">clickup_doc_id</span>: abc123xyz
+<span class="val">title</span>: How to Request a New Laptop
+<span class="val">url</span>: https://app.clickup.com/v/dc/...
+<span class="val">date_updated</span>: 2024-03-01T10:00:00+00:00
+<span class="comment">---</span>
+
+## Laptop Request Process
+
+Submit your request via the IT Hardware portal...
+          </div>
+          <p style="font-size:13px;color:var(--text-muted);margin-top:12px;">The <code class="inline-code">url</code> field is required — every drafted reply includes this link so the requester can find the full doc.</p>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:12px;">Sync output</h3>
+          <div class="code-block">
+<span class="comment"># /sync-kb</span>
+[synced]  How to Request a New Laptop
+[synced]  VPN Access Request Process
+[skipped] Onboarding Checklist (up to date)
+[synced]  Software License Requests
+[error]   Old Draft Doc: HTTP 403
+
+Synced <span class="val">3</span> docs, skipped <span class="val">1</span>, errors <span class="val">1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SAFETY RAILS ── -->
+<section id="safety" style="background:white;">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Safety</div>
+      <h2>Designed to do nothing when in doubt</h2>
+      <p>Every skip condition is logged. Every draft is marked. The system has no way to send a reply — only post a private draft for a human to review.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;" class="rails-grid">
+      <div>
+        <h3 style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:16px;">🚫 Causes a skip</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="rail-card">
+            <div class="rail-icon skip">🔁</div>
+            <div>
+              <h4>Already processed</h4>
+              <p>If any prior conversation on the ticket contains <code class="inline-code">&lt;!-- cq-bot:v1 --&gt;</code>, the ticket is skipped. No double-drafts.</p>
+            </div>
+          </div>
+          <div class="rail-card">
+            <div class="rail-icon skip">⭐</div>
+            <div>
+              <h4>VIP requester</h4>
+              <p>Tickets from email addresses listed in <code class="inline-code">exclusions.yaml</code> are never auto-processed.</p>
+            </div>
+          </div>
+          <div class="rail-card">
+            <div class="rail-icon skip">🔍</div>
+            <div>
+              <h4>Exclusion keyword match</h4>
+              <p>Any ticket whose subject or body matches a regex in the exclusion list (security, incident, PII, etc.) is skipped.</p>
+            </div>
+          </div>
+          <div class="rail-card">
+            <div class="rail-icon skip">📎</div>
+            <div>
+              <h4>Has attachments</h4>
+              <p>Tickets with file attachments are skipped — they may contain sensitive data that needs human review.</p>
+            </div>
+          </div>
+          <div class="rail-card">
+            <div class="rail-icon skip">🤔</div>
+            <div>
+              <h4>Classifier returns false</h4>
+              <p>If the ticket isn't clearly asking "where do I go for X?", the classifier returns false and the ticket is skipped. Ambiguity = skip.</p>
+            </div>
+          </div>
+          <div class="rail-card">
+            <div class="rail-icon skip">📚</div>
+            <div>
+              <h4>No KB match</h4>
+              <p>If no local KB doc clearly answers the question, the ticket is skipped rather than inventing an answer.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:16px;">✅ Required before posting</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="rail-card">
+            <div class="rail-icon require">🎯</div>
+            <div>
+              <h4>Classifier explicitly true</h4>
+              <p>The classifier must return <code class="inline-code">"is_routing_question": true</code>. A parse error or any non-true result blocks posting.</p>
+            </div>
+          </div>
+          <div class="rail-card">
+            <div class="rail-icon require">🔗</div>
+            <div>
+              <h4>KB doc with URL</h4>
+              <p>A KB doc must be found and must contain a <code class="inline-code">url:</code> field in its frontmatter. No URL = no draft.</p>
+            </div>
+          </div>
+          <div class="rail-card">
+            <div class="rail-icon require">🔒</div>
+            <div>
+              <h4>Private note only</h4>
+              <p>Notes are always posted with <code class="inline-code">private: true</code>. There is no code path that posts a public reply.</p>
+            </div>
+          </div>
+          <div class="rail-card">
+            <div class="rail-icon require">📋</div>
+            <div>
+              <h4>DRAFT header</h4>
+              <p>Every note starts with <code class="inline-code">**DRAFT — review before sending**</code> so it's unmissable in the Freshservice UI.</p>
+            </div>
+          </div>
+          <div class="rail-card">
+            <div class="rail-icon require">🏷️</div>
+            <div>
+              <h4>Idempotency marker</h4>
+              <p>Every note ends with <code class="inline-code">&lt;!-- cq-bot:v1 --&gt;</code> so the system knows this ticket was handled and won't re-draft it.</p>
+            </div>
+          </div>
+          <div class="rail-card">
+            <div class="rail-icon require">🚫</div>
+            <div>
+              <h4>No invented content</h4>
+              <p>The draft prompt is instructed to return a null sentinel rather than invent any team name, URL, or routing target not in the KB.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRIAGE RESULTS ── -->
+<section style="background:var(--bg);">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Output</div>
+      <h2>Every run prints a summary table</h2>
+      <p>After processing your queue, <code class="inline-code">/triage</code> outputs exactly what happened to each ticket and why.</p>
+    </div>
+    <div class="card card-full" style="overflow-x:auto;">
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th>Ticket ID</th>
+            <th>Subject</th>
+            <th>Action</th>
+            <th>KB Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>12345</strong></td>
+            <td>Where do I request a new laptop?</td>
+            <td><span class="tag tag-green">drafted</span></td>
+            <td><code class="inline-code">laptop-requests.md</code></td>
+          </tr>
+          <tr>
+            <td><strong>12346</strong></td>
+            <td>My email keeps crashing</td>
+            <td><span class="tag tag-gray">skipped:not_routing</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>12347</strong></td>
+            <td>CEO request — please escalate</td>
+            <td><span class="tag tag-yellow">excluded:keyword</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>12348</strong></td>
+            <td>How do I get VPN access?</td>
+            <td><span class="tag tag-green">drafted</span></td>
+            <td><code class="inline-code">vpn-access.md</code></td>
+          </tr>
+          <tr>
+            <td><strong>12349</strong></td>
+            <td>Where do I order a standing desk?</td>
+            <td><span class="tag tag-gray">skipped:no_kb_match</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>12350</strong></td>
+            <td>Software license request process?</td>
+            <td><span class="tag tag-gray">skipped:already_drafted</span></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── SETUP ── -->
+<section id="setup" style="background:white;">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Setup</div>
+      <h2>Up and running in 4 steps</h2>
+      <p>No servers, no databases, no subscriptions. Everything runs locally inside Claude Code.</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px;max-width:760px;margin:0 auto;">
+      <div class="setup-step">
+        <div class="setup-num">1</div>
+        <div class="setup-body" style="flex:1;">
+          <h3>Install Python dependencies</h3>
+          <p>Only three libraries are needed — <code class="inline-code">requests</code>, <code class="inline-code">pyyaml</code>, and <code class="inline-code">python-dotenv</code>.</p>
+          <div class="code-block">pip install -r requirements.txt</div>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-num">2</div>
+        <div class="setup-body" style="flex:1;">
+          <h3>Configure your environment</h3>
+          <p>Copy the example env file and fill in your ClickUp credentials.</p>
+          <div class="code-block">cp .env.example .env</div>
+          <div class="code-block" style="margin-top:12px;">
+<span class="comment"># ClickUp personal token (Settings → Apps → API Token)</span>
+<span class="val">CLICKUP_TOKEN</span>=pk_xxxxxxxxxxxxxxxxxxxx
+
+<span class="comment"># Your numeric workspace ID</span>
+<span class="val">CLICKUP_WORKSPACE_ID</span>=12345678
+
+<span class="comment"># Comma-separated folder IDs holding your routing docs</span>
+<span class="val">CLICKUP_DOC_FOLDER_IDS</span>=folder_id_1,folder_id_2
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-num">3</div>
+        <div class="setup-body" style="flex:1;">
+          <h3>Connect the Freshservice MCP</h3>
+          <p>The <code class="inline-code">/triage</code> command calls Freshservice through the <code class="inline-code">mcp__freshservice-mcp</code> MCP server. This must be configured and authenticated in Claude Code before running the command. If it's missing, you'll see MCP tool errors when triaging.</p>
+          <div class="callout" style="margin-top:12px;">
+            <span class="callout-icon">💡</span>
+            <div>If you're already using Freshservice in Claude Code for other workflows, this MCP is likely already connected.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-num">4</div>
+        <div class="setup-body" style="flex:1;">
+          <h3>Populate the knowledge base</h3>
+          <p>Run the KB sync before your first triage. This pulls your ClickUp docs into the local <code class="inline-code">kb/</code> folder — there's nothing to search until this is done.</p>
+          <div class="code-block">
+<span class="comment"># In Claude Code:</span>
+<span class="cmd">/sync-kb</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── USAGE ── -->
+<section style="background:var(--bg);">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Usage</div>
+      <h2>Two slash commands, that's it</h2>
+    </div>
+
+    <div class="grid-2" style="gap:24px;max-width:860px;margin:0 auto;">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span style="font-size:24px;">🔄</span>
+          <h3 style="font-size:17px;font-weight:800;">/sync-kb</h3>
+        </div>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">Pulls your ClickUp routing docs into the local <code class="inline-code">kb/</code> folder. Run this whenever your ClickUp docs are updated.</p>
+        <div class="code-block">
+<span class="cmd">/sync-kb</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span style="font-size:24px;">🎯</span>
+          <h3 style="font-size:17px;font-weight:800;">/triage</h3>
+        </div>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">Processes your open ticket queue and drafts replies. Supports optional arguments to control scope.</p>
+        <div class="code-block">
+<span class="cmd">/triage</span>                   <span class="comment"># last 24h, up to 10 tickets</span>
+<span class="cmd">/triage</span> <span class="flag">--limit</span> <span class="val">5</span>          <span class="comment"># cap at 5</span>
+<span class="cmd">/triage</span> <span class="flag">--since</span> <span class="val">48h</span>       <span class="comment"># look back 48 hours</span>
+<span class="cmd">/triage</span> <span class="flag">--dry-run</span>          <span class="comment"># classify only, no writes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FILE STRUCTURE ── -->
+<section style="background:white;">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Project structure</div>
+      <h2>Everything in one place</h2>
+    </div>
+    <div style="max-width:680px;margin:0 auto;">
+      <div class="file-tree">
+<span class="tree-dir">constantquestions/</span>
+├── <span class="tree-dir">.claude/commands/</span>
+│   ├── <span class="tree-key">triage.md</span>         <span class="tree-comment"># /triage — the main 9-step workflow</span>
+│   └── <span class="tree-key">sync-kb.md</span>        <span class="tree-comment"># /sync-kb — runs the KB sync script</span>
+├── <span class="tree-dir">config/</span>
+│   ├── <span class="tree-key">exclusions.yaml</span>   <span class="tree-comment"># VIP emails + keyword blocklist</span>
+│   └── <span class="tree-dir">prompts/</span>
+│       ├── <span class="tree-key">classifier.md</span>   <span class="tree-comment"># is this a routing question?</span>
+│       └── <span class="tree-key">draft_reply.md</span>  <span class="tree-comment"># write the private note reply</span>
+├── <span class="tree-dir">scripts/</span>
+│   └── <span class="tree-key">sync_clickup_kb.py</span> <span class="tree-comment"># ClickUp v3 API → kb/*.md</span>
+├── <span class="tree-dir">kb/</span>                  <span class="tree-comment"># local doc cache — gitignored</span>
+│   └── .gitkeep
+├── <span class="tree-file">.env.example</span>
+├── <span class="tree-file">.gitignore</span>
+├── <span class="tree-file">requirements.txt</span>
+└── <span class="tree-file">README.md</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CUSTOMIZING ── -->
+<section style="background:var(--bg);">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Customizing</div>
+      <h2>Three files control everything</h2>
+    </div>
+    <div class="grid-3">
+      <div class="feature-card">
+        <div class="feature-icon">🚫</div>
+        <h3>config/exclusions.yaml</h3>
+        <p>Add VIP email addresses to <code class="inline-code">vip_emails</code> or new regex patterns to <code class="inline-code">exclusion_keywords</code> to widen what gets skipped. When in doubt, add to this list.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>config/prompts/classifier.md</h3>
+        <p>Controls what counts as a routing question. Add examples to the in-scope or out-of-scope lists to tune the classifier. Narrower = fewer drafts, more precision.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📂</div>
+        <h3>CLICKUP_DOC_FOLDER_IDS</h3>
+        <p>Add more ClickUp folder IDs to your <code class="inline-code">.env</code> and re-run <code class="inline-code">/sync-kb</code> to expand the KB. More docs = better coverage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── OUT OF SCOPE ── -->
+<section style="background:white;">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">v1 scope</div>
+      <h2>What's deliberately not here</h2>
+      <p>These were left out on purpose — not because they're hard, but because v1 should earn trust before doing more.</p>
+    </div>
+    <div class="grid-2" style="max-width:760px;margin:0 auto;">
+      <div class="feature-card" style="opacity:0.65;">
+        <div class="feature-icon" style="background:#f0f2f5;">📤</div>
+        <h3>Auto-send</h3>
+        <p>Stays draft-only until there's enough history to trust the output rate. Target: ≥70% human send-through before considering auto-send.</p>
+      </div>
+      <div class="feature-card" style="opacity:0.65;">
+        <div class="feature-icon" style="background:#f0f2f5;">🔮</div>
+        <h3>Vector / semantic search</h3>
+        <p>Plain grep works well for short routing queries. Revisit only if recall becomes a real problem in practice.</p>
+      </div>
+      <div class="feature-card" style="opacity:0.65;">
+        <div class="feature-icon" style="background:#f0f2f5;">🔔</div>
+        <h3>Webhooks / scheduled polling</h3>
+        <p>Pure on-demand only. No background process, no always-on daemon. You run it when you want it.</p>
+      </div>
+      <div class="feature-card" style="opacity:0.65;">
+        <div class="feature-icon" style="background:#f0f2f5;">🛠️</div>
+        <h3>How-to & break-fix tickets</h3>
+        <p>The classifier is intentionally narrow. Easy to broaden later by editing <code class="inline-code">classifier.md</code> — but v1 stays focused on routing only.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-logo">constantquestions</div>
+  <p>Built with Claude Code · Freshservice MCP · ClickUp v3 API</p>
+  <p style="margin-top:12px;">
+    <a href="https://github.com/kkudumu/constant-questions">View on GitHub →</a>
+  </p>
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#e6f7ef',
+      primaryTextColor: '#1c1c1e',
+      primaryBorderColor: '#02a95c',
+      lineColor: '#02a95c',
+      secondaryColor: '#f0f2f5',
+      tertiaryColor: '#ffffff',
+      edgeLabelBackground: '#ffffff',
+      fontSize: '14px'
+    },
+    flowchart: { curve: 'basis', htmlLabels: true }
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const el = document.querySelector(a.getAttribute('href'));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
