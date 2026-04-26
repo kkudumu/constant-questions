@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(mkdir -p .claude/commands config/prompts scripts kb)",
-      "Bash(touch kb/.gitkeep)"
+      "Bash(touch kb/.gitkeep)",
+      "Bash(mkdir -p ~/.claude/ftm-state)",
+      "Bash(echo \"plan-presented\")",
+      "Bash(mkdir -p /c/Users/kkudu/.claude/ftm-state)",
+      "Bash(echo \"write README.md and commit for constantquestions readme worktree\")",
+      "Bash(touch \"C:\\\\Users\\\\kkudu\\\\Documents\\\\Code\\\\constantquestions\\\\.worktrees\\\\kb-sync/../../../.claude/ftm-state/.plan-presented\")",
+      "Bash(touch ~/.claude/ftm-state/.plan-presented)"
     ]
   }
 }
