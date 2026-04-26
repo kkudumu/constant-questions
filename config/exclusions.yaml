@@ -1,0 +1,54 @@
+# config/exclusions.yaml
+#
+# Hard-exclusion rules for the /triage auto-draft workflow.
+# ANY ticket matching one of these rules is silently skipped — no draft is
+# written and no private note is posted.  The skip reason is logged as
+# "excluded:vip" or "excluded:keyword" for observability.
+#
+# Edit this file to widen or narrow the exclusion surface.  When in doubt,
+# add to this list rather than risk auto-drafting a sensitive ticket.
+
+# ---------------------------------------------------------------------------
+# VIP / executive emails
+# Tickets submitted by these addresses are never auto-processed, regardless
+# of subject or content.  Add the primary email address exactly as it appears
+# in Freshservice (case-insensitive comparison is applied at runtime).
+# ---------------------------------------------------------------------------
+vip_emails:
+  - ceo@example.com
+  # Add further executive or high-sensitivity addresses below, e.g.:
+  # - cto@example.com
+  # - cfo@example.com
+  # - board-member@example.com
+
+# ---------------------------------------------------------------------------
+# Keyword exclusion patterns
+# Each entry is a Python-compatible regex matched against the concatenation of
+# the ticket subject + description (case-insensitive, DOTALL).
+# If ANY pattern matches, the ticket is skipped with reason "excluded:keyword".
+#
+# Keep patterns broad enough to catch natural language variations.
+# Anchors are not needed — a partial match anywhere in the text is sufficient.
+# ---------------------------------------------------------------------------
+exclusion_keywords:
+  # Security incidents — must never receive an auto-drafted note
+  - 'security\s+breach'
+  - 'data\s+breach'
+  - 'incident'          # covers "security incident", "major incident", etc.
+  - 'ransomware'
+  - 'phishing'
+
+  # Executive-escalation signals
+  - 'exec(utive)?'      # "exec", "executive", "executives"
+  - 'urgent\s+escalat'  # "urgent escalation", "urgently escalating"
+
+  # Credential / identity topics — handled by dedicated workflows
+  - 'password\s+reset'
+
+  # Regulated data and compliance frameworks
+  - 'PII'               # Personally Identifiable Information
+  - 'HIPAA'
+  - 'SOC\s*2'           # "SOC 2", "SOC2"
+  - 'audit'
+  - 'compliance'
+  - 'legal\s+hold'
